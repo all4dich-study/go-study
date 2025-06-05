@@ -1,28 +1,26 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 )
 
-// TIP To run your code, right-click the code and select <b>Run</b>. Alternatively, click
-// the <icon src="AllIcons.Actions.Execute"/> icon in the gutter and select the <b>Run</b> menu item from here.
 func printHello() {
 	fmt.Println("Hello")
 }
 
 func main() {
-	//TIP Press <shortcut actionId="ShowIntentionActions"/> when your caret is at the underlined or highlighted text
-	// to see how GoLand suggests fixing it.
-	s := "gopher"
-	fmt.Println("Hello and welcome, %s!", s)
+	tcaAddressFlag := flag.String("tca-address", "0x70", "I2C address of the TCA9548A multiplexer (default: 0x70)")
+	withoutMultiplexerFlag := flag.Bool("without-multiplexer", false, "Set to true if INA260 is connected directly without TCA9548A multiplexer (default: false)")
 
-	for i := 1; i <= 5; i++ {
-		//TIP You can try debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-		// for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>. To start your debugging session,
-		// right-click your code in the editor and select the <b>Debug</b> option.
-		fmt.Println("i =", 100/i)
+	flag.Parse()
+	if *withoutMultiplexerFlag {
+		fmt.Println("Running without TCA9548A multiplexer, using INA260 directly.")
+		tcaAddressFlag = nil // Set to nil to skip TCA address usage
+	} else {
+		fmt.Println("Running with TCA9548A multiplexer.")
 	}
-}
 
-//TIP See GoLand help at <a href="https://www.jetbrains.com/help/go/">jetbrains.com/help/go/</a>.
-// Also, you can try interactive lessons for GoLand by selecting 'Help | Learn IDE Features' from the main menu.
+	tcaAddressStr := *tcaAddressFlag
+	fmt.Printf("Using TCA address: %s\n", tcaAddressStr)
+}
