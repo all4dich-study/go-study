@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"go-study/mymodule"
 )
 
 func printHello() {
@@ -23,4 +24,5 @@ func main() {
 
 	tcaAddressStr := *tcaAddressFlag
 	fmt.Printf("Using TCA address: %s\n", tcaAddressStr)
+	mymodule.Run()
 }
