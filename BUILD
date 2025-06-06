@@ -17,27 +17,59 @@ go_binary(
 )
 
 go_binary(
+    name = "main_linux_arm64",
+    srcs = ["main.go"],
+    deps = [":mymodule_lib"], # Include the library as a dependency
+    goos = "linux",
+    goarch = "arm64", # Specify target OS and architecture
+)
+
+go_binary(
     name = "print_fortune",
     srcs = ["print_fortune.go"],
-    deps = ["//fortune"]
+    deps = ["//fortune"],
+)
+
+go_binary(
+    name = "print_fortune_linux_arm64",
+    srcs = ["print_fortune.go"],
+    deps = ["//fortune"],
+    goos = "linux",
+    goarch = "arm64", # Specify target OS and architecture
+)
+
+filegroup(  
+    name = "build_all",
+    srcs = [
+        ":main",
+        ":main_linux_arm64",
+        ":print_fortune",
+        ":print_fortune_linux_arm64",
+        ],
+)
+
+alias(
+    name = "all",
+    actual = ":build_all",
 )
 
 # Platform: from https://github.com/bazel-contrib/rules_go/blob/master/go/private/platforms.bzl
 # go_cross_binary reference: https://github.com/bazel-contrib/rules_go/blob/master/go/private/rules/cross.bzl#L92
-go_cross_binary(
-    name = "main_linux_amd64",
-    platform = "@rules_go//go/toolchain:linux_arm64",
-    target = ":main",
-)
+# go_cross_binary(
+#     name = "main_linux_amd64",
+#     platform = "@rules_go//go/toolchain:linux_arm64",
+#     target = ":main",
+# )
+# 
+# go_cross_binary(
+#     name = "print_fortune_linux_amd64",
+#     platform = "@rules_go//go/toolchain:linux_amd64_cgo",
+#     target = ":print_fortune",
+# )
+# 
+# go_cross_binary(
+#     name = "main_aix_ppc64",
+#     platform = "@rules_go//go/toolchain:aix_ppc64",
+#     target = ":main",
+# )
 
-go_cross_binary(
-    name = "print_fortune_linux_amd64",
-    platform = "@rules_go//go/toolchain:linux_amd64_cgo",
-    target = ":print_fortune",
-)
-
-go_cross_binary(
-    name = "main_aix_ppc64",
-    platform = "@rules_go//go/toolchain:aix_ppc64",
-    target = ":main",
-)
