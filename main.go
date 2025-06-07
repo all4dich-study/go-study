@@ -4,6 +4,8 @@ import (
 	"flag"
 	"fmt"
 	"go-study/mymodule"
+	"periph.io/x/conn/v3/i2c"
+	"periph.io/x/conn/v3/i2c/i2creg"
 )
 
 func printHello() {
@@ -25,4 +27,6 @@ func main() {
 	tcaAddressStr := *tcaAddressFlag
 	fmt.Printf("Using TCA address: %s\n", tcaAddressStr)
 	mymodule.Run()
+	dev, _ := i2creg.Open("")
+	fmt.Println("I2C device opened:", dev)
 }

@@ -17,5 +17,31 @@ bazel_dep(
 bazel_dep(
     name = "gazelle",
     version = "0.36.0",
-    repo_name = "com_github_bazelbuild_bazel_gazelle",
+    #  repo_name = "com_github_bazelbuild_bazel_gazelle",
+)
+
+# 1. Import the TWO separate extensions from rules_go v0.48.0
+go_sdk = use_extension(
+    "@rules_go//go:extensions.bzl",
+    "go_sdk_extension",
+)
+go_deps = use_extension(
+    "@rules_go//go:extensions.bzl",
+    "go_deps_extension",
+)
+
+# 2. Invoke the Go dependency extension to read your go.mod
+go_deps.from_file(go_mod = "//:go.mod")
+
+# 3. Invoke the Go SDK extension to download the toolchain
+go_sdk.download(version = "1.22.4") # Using a specific Go version
+
+# 4. Make the repositories created by EACH extension visible
+use_repo(
+    go_deps,
+    "io_periph_x_conn_v3", # The dependency from go_deps_extension
+)
+use_repo(
+    go_sdk,
+    "go_sdk", # The SDK from go_sdk_extension
 )

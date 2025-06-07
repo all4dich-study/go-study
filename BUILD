@@ -1,5 +1,7 @@
+load("@gazelle//:def.bzl", "gazelle")
+
 # BUILD
-load("@rules_go//go:def.bzl", "go_binary", "go_library", "go_cross_binary")
+load("@rules_go//go:def.bzl", "go_binary", "go_cross_binary", "go_library")
 
 # Define the main Go binary
 # Define the mymodule library
@@ -13,15 +15,20 @@ load("@rules_go//go:def.bzl", "go_binary", "go_library", "go_cross_binary")
 go_binary(
     name = "main",
     srcs = ["main.go"],
-    deps = ["//mymodule"], # Include the library as a dependency
+    #deps = ["//mymodule", "io_periph_x_conn_v3"], # Include the library as a dependency
+    deps = [
+    "//mymodule",
+    "@io_periph_x_conn_v3//i2c:go_default_library",
+    "@io_periph_x_conn_v3//i2c/i2creg:go_default_library",
+    ],  # Include the library as a dependency
 )
 
 go_binary(
     name = "main_linux_arm64",
     srcs = ["main.go"],
-    deps = ["//mymodule"], # Include the library as a dependency
+    goarch = "arm64",  # Specify target OS and architecture
     goos = "linux",
-    goarch = "arm64", # Specify target OS and architecture
+    deps = ["//mymodule"],  # Include the library as a dependency
 )
 
 go_binary(
@@ -33,19 +40,19 @@ go_binary(
 go_binary(
     name = "print_fortune_linux_arm64",
     srcs = ["print_fortune.go"],
-    deps = ["//fortune"],
+    goarch = "arm64",  # Specify target OS and architecture
     goos = "linux",
-    goarch = "arm64", # Specify target OS and architecture
+    deps = ["//fortune"],
 )
 
-filegroup(  
+filegroup(
     name = "build_all",
     srcs = [
         ":main",
         ":main_linux_arm64",
         ":print_fortune",
         ":print_fortune_linux_arm64",
-        ],
+    ],
 )
 
 alias(
@@ -60,16 +67,33 @@ alias(
 #     platform = "@rules_go//go/toolchain:linux_arm64",
 #     target = ":main",
 # )
-# 
+#
 # go_cross_binary(
 #     name = "print_fortune_linux_amd64",
 #     platform = "@rules_go//go/toolchain:linux_amd64_cgo",
 #     target = ":print_fortune",
 # )
-# 
+#
 # go_cross_binary(
 #     name = "main_aix_ppc64",
 #     platform = "@rules_go//go/toolchain:aix_ppc64",
 #     target = ":main",
 # )
 
+gazelle(name = "gazelle")
+
+go_library(
+    name = "go-study_lib",
+    srcs = [
+        "main.go",
+        "print_fortune.go",
+    ],
+    importpath = "go-study",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//fortune",
+        "//mymodule",
+        "@io_periph_x_conn_v3//i2c:go_default_library",
+        "@io_periph_x_conn_v3//i2c/i2creg:go_default_library",
+    ],
+)
