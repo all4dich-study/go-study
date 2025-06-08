@@ -17,9 +17,9 @@ go_binary(
     srcs = ["main.go"],
     #deps = ["//mymodule", "io_periph_x_conn_v3"], # Include the library as a dependency
     deps = [
-    "//mymodule",
-    "@io_periph_x_conn_v3//i2c:go_default_library",
-    "@io_periph_x_conn_v3//i2c/i2creg:go_default_library",
+        "//mymodule",
+        "@io_periph_x_conn_v3//i2c:go_default_library",
+        "@io_periph_x_conn_v3//i2c/i2creg:go_default_library",
     ],  # Include the library as a dependency
 )
 

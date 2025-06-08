@@ -1,47 +1,38 @@
-###############################################################################
-# Bazel now uses Bzlmod by default to manage external dependencies.
-# Please consider migrating your external dependencies from WORKSPACE to MODULE.bazel.
-#
-# For more details, please check https://github.com/bazelbuild/bazel/issues/18958
-###############################################################################
+# MODULE.bazel
+
 module(
     name = "go-study",
     version = "0.0.1",
 )
 
+# 1. Upgrade to a modern version of rules_go that has full Bzlmod support.
 bazel_dep(
     name = "rules_go",
     version = "0.50.1",
+    # repo_name = "io_bazel_rules_go",
 )
-
 bazel_dep(
     name = "gazelle",
-    version = "0.36.0",
-    #  repo_name = "com_github_bazelbuild_bazel_gazelle",
+    version = "0.43.0", # A version compatible with the newer rules_go
+    # repo_name = "com_github_bazelbuild_bazel_gazelle",
 )
 
-# 1. Import the TWO separate extensions from rules_go v0.48.0
-go_sdk = use_extension(
+# 2. Import the modern 'go' extension.
+# This single extension handles both the SDK and dependencies.
+go = use_extension(
     "@rules_go//go:extensions.bzl",
-    "go_sdk_extension",
-)
-go_deps = use_extension(
-    "@rules_go//go:extensions.bzl",
-    "go_deps_extension",
+    "go_sdk",
 )
 
-# 2. Invoke the Go dependency extension to read your go.mod
-go_deps.from_file(go_mod = "//:go.mod")
+# 3. Tell the extension to manage dependencies from your go.mod file.
+bazel_dep(
+    go_mod = "//:go.mod",
+    go_version = "1.22",
+)
 
-# 3. Invoke the Go SDK extension to download the toolchain
-go_sdk.download(version = "1.22.4") # Using a specific Go version
-
-# 4. Make the repositories created by EACH extension visible
+# 4. Make the Go SDK and the Go dependencies visible to your project.
 use_repo(
-    go_deps,
-    "io_periph_x_conn_v3", # The dependency from go_deps_extension
-)
-use_repo(
-    go_sdk,
-    "go_sdk", # The SDK from go_sdk_extension
+    go,
+    "go_sdk",
+    "io_periph_x_conn_v3",
 )
