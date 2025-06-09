@@ -4,7 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"go-study/mymodule"
-	"periph.io/x/conn/v3/i2c"
+	//"periph.io/x/conn/v3/i2c"
 	"periph.io/x/conn/v3/i2c/i2creg"
 )
 
