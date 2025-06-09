@@ -16,6 +16,9 @@ go_binary(
     deps = [
         "//mymodule",
         "@com_github_stretchr_testify//assert",  # Example dependency, adjust as needed
+        "@io_periph_x_conn_v3//i2c",  # Example dependency, adjust as needed
+        "@io_periph_x_conn_v3//i2c/i2creg",  # Example dependency, adjust as needed
+        "@io_periph_x_host_v3//:go_default_library",  # Example dependency, adjust as needed
     ],  # Include the library as a dependency
 )
 
