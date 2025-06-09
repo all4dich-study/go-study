@@ -15,6 +15,7 @@ go_binary(
     srcs = ["main.go"],
     deps = [
         "//mymodule",
+        "@com_github_stretchr_testify//assert",  # Example dependency, adjust as needed
     ],  # Include the library as a dependency
 )
 

@@ -3,11 +3,18 @@ package main
 import (
 	"flag"
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"go-study/mymodule"
+	"testing"
 )
 
 func printHello() {
 	fmt.Println("Hello")
+}
+
+func TestPrintHello(t *testing.T) {
+	assert := assert.New(t)
+	assert.NotNil(printHello, "printHello function should not be nil")
 }
 
 func main() {
